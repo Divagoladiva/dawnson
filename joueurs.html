@@ -3,15 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>joueurs</title>
+    <title>Joueurs</title>
     <link rel="stylesheet" href="style.css">
+    <script>
+        let flemmardPercent = 50; // Valeur de départ
+        
+        function updateCounter() {
+            document.getElementById("flemmardValue").textContent = flemmardPercent + "%";
+        }
+        
+        function increase() {
+            if (flemmardPercent < 100) {
+                flemmardPercent += 10;
+                updateCounter();
+            }
+        }
+        
+        function decrease() {
+            if (flemmardPercent > 0) {
+                flemmardPercent -= 10;
+                updateCounter();
+            }
+        }
+        
+        function startGame() {
+            document.getElementById("setup").style.display = "none";
+            document.getElementById("roleDisplay").style.display = "block";
+            
+            let roleText = flemmardPercent >= 50 ? "Flemmard" : "Bosseur";
+            let roleColor = flemmardPercent >= 50 ? "red" : "blue";
+            
+            document.getElementById("role").textContent = roleText;
+            document.getElementById("role").style.color = roleColor;
+        }
+    </script>
 </head>
 <body>
-    <div class="container">
-        <h1>Explication</h1>
-        <p><strong>Dans l'entreprise Quoicoub & skibidi, Il y a 2 types de gens: Les bosseurs et les flemmards. Vous aurrez chacun des tâches à compléter, pour les bosseurs ça sera des tâches qui feront avancer l'entreprise, mais pour les flemmards c'est complètement l'inverse!
-        Votre but sera de ne pas vous faire repérer en tant que flemmard. Toutes les 10 minutes, il y aurra une réunion à la TV, vous devrez tous venir et nous choisirons 1 personne à virer de l'entreprise. La partie se termine quand il n'y a plus aucun bosseurs ou flemmards.</strong></p>
-        <a href="task.html" class="btn">Start</a>
+    <div class="container" id="setup">
+        <h1>% de Flemmards</h1>
+        <button class="btn" onclick="decrease()">-</button>
+        <span id="flemmardValue">50%</span>
+        <button class="btn" onclick="increase()">+</button>
+        <p><strong>Dans l'entreprise Quoicoub & Skibidi, il y a 2 types de gens : Les bosseurs et les flemmards...</strong></p>
+        <button class="btn" onclick="startGame()">Start</button>
+    </div>
+    
+    <div class="container" id="roleDisplay" style="display: none;">
+        <h1>Ton rôle :</h1>
+        <h2 id="role"></h2>
     </div>
 </body>
 </html>
