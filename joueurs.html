@@ -7,10 +7,12 @@
     <link rel="stylesheet" href="style.css">
     <script>
         let flemmardPercent = 50;
-        let quetesBleues = ["Exemple quête bleue 1", "Exemple quête bleue 2", "Exemple quête bleue 3", "Exemple quête bleue 4", "Exemple quête bleue 5"];
-        let quetesRouges = ["Exemple quête rouge 1", "Exemple quête rouge 2", "Exemple quête rouge 3", "Exemple quête rouge 4", "Exemple quête rouge 5"];
+        let quetesBleues = ["Exemple quête bleue 1", "Exemple quête bleue 2", "Exemple quête bleue 3", "Exemple quête bleue 4", "Exemple quête bleue 5", "Exemple quête bleue 6", "Exemple quête bleue 7", "Exemple quête bleue 8", "Exemple quête bleue 9", "Exemple quête bleue 10"];
+        let quetesRouges = ["Exemple quête rouge 1", "Exemple quête rouge 2", "Exemple quête rouge 3", "Exemple quête rouge 4", "Exemple quête rouge 5", "Exemple quête rouge 6", "Exemple quête rouge 7", "Exemple quête rouge 8", "Exemple quête rouge 9", "Exemple quête rouge 10"];
         let currentQuetes = ["", "", ""];
+        let completedQuetes = [false, false, false];
         let isFlemmard = false;
+        let timerActive = false;
         
         function updateCounter() {
             document.getElementById("flemmardValue").textContent = flemmardPercent + "%";
@@ -47,11 +49,19 @@
         }
         
         function generateQuests() {
+            let usedQuests = [];
             for (let i = 0; i < 3; i++) {
                 let chance = Math.random();
                 let isBlue = !isFlemmard && chance < 0.8;
                 let queteList = isBlue ? quetesBleues : quetesRouges;
-                currentQuetes[i] = queteList[Math.floor(Math.random() * queteList.length)];
+                let newQuete;
+                do {
+                    newQuete = queteList[Math.floor(Math.random() * queteList.length)];
+                } while (usedQuests.includes(newQuete));
+                usedQuests.push(newQuete);
+                
+                currentQuetes[i] = newQuete;
+                completedQuetes[i] = false;
                 
                 let cell = document.getElementById(`quete${i}`);
                 cell.textContent = currentQuetes[i];
@@ -59,14 +69,39 @@
             }
         }
         
-        function changeQuete(index) {
-            let isBlue = !isFlemmard && Math.random() < 0.8;
-            let queteList = isBlue ? quetesBleues : quetesRouges;
-            currentQuetes[index] = queteList[Math.floor(Math.random() * queteList.length)];
+        function completeQuete(index) {
+            completedQuetes[index] = true;
+            document.getElementById(`quete${index}`).style.textDecoration = "line-through";
+            checkAllCompleted();
+        }
+        
+        function checkAllCompleted() {
+            if (completedQuetes.every(q => q)) {
+                document.getElementById("timer").style.display = "block";
+                startTimer();
+            }
+        }
+        
+        function startTimer() {
+            if (timerActive) return;
+            timerActive = true;
+            let timeLeft = 20;
+            let timerElement = document.getElementById("timerValue");
             
-            let cell = document.getElementById(`quete${index}`);
-            cell.textContent = currentQuetes[index];
-            cell.style.backgroundColor = isBlue ? "blue" : "red";
+            let interval = setInterval(() => {
+                timerElement.textContent = timeLeft;
+                if (timeLeft === 0) {
+                    clearInterval(interval);
+                    timerActive = false;
+                    document.getElementById("timer").style.display = "none";
+                    generateQuests();
+                }
+                timeLeft--;
+            }, 1000);
+        }
+        
+        function showDescription(index) {
+            alert(currentQuetes[index] + " - Description de la quête");
         }
     </script>
 </head>
@@ -76,8 +111,7 @@
         <button class="btn" onclick="decrease()">-</button>
         <span id="flemmardValue">50%</span>
         <button class="btn" onclick="increase()">+</button>
-        <p><strong>Dans l'entreprise Quoicoub & skibidi, Il y a 2 types de gens: Les bosseurs et les flemmards. Vous aurrez chacun des tâches à compléter, pour les bosseurs ça sera des tâches qui feront avancer l'entreprise, mais pour les flemmards c'est complètement l'inverse!
-        Votre but sera de ne pas vous faire repérer en tant que flemmard. Toutes les 10 minutes, il y aurra une réunion à la TV, vous devrez tous venir et nous choisirons 1 personne à virer de l'entreprise. La partie se termine quand il n'y a plus aucun bosseurs ou flemmards.</strong></p>
+        <p><strong>Dans l'entreprise Quoicoub & Skibidi, il y a 2 types de gens : Les bosseurs et les flemmards...</strong></p>
         <button class="btn" onclick="startGame()">Start</button>
     </div>
     
@@ -89,17 +123,23 @@
         <table>
             <tr>
                 <td id="quete0"></td>
-                <td><button onclick="changeQuete(0)">❌</button></td>
+                <td><button onclick="completeQuete(0)">✔️</button></td>
+                <td><button onclick="showDescription(0)">❓</button></td>
             </tr>
             <tr>
                 <td id="quete1"></td>
-                <td><button onclick="changeQuete(1)">❌</button></td>
+                <td><button onclick="completeQuete(1)">✔️</button></td>
+                <td><button onclick="showDescription(1)">❓</button></td>
             </tr>
             <tr>
                 <td id="quete2"></td>
-                <td><button onclick="changeQuete(2)">❌</button></td>
+                <td><button onclick="completeQuete(2)">✔️</button></td>
+                <td><button onclick="showDescription(2)">❓</button></td>
             </tr>
         </table>
+        <div id="timer" style="display: none;">
+            <h3>Nouvelles quêtes dans : <span id="timerValue">20</span> secondes</h3>
+        </div>
     </div>
 </body>
 </html>
