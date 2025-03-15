@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tv</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        let timer;
+        let timeLeft = 900; // 15 minutes in seconds
+        let isRunning = false;
+        
+        function startTimer() {
+            if (!isRunning) {
+                isRunning = true;
+                timer = setInterval(() => {
+                    if (timeLeft > 0) {
+                        timeLeft--;
+                        updateDisplay();
+                    } else {
+                        clearInterval(timer);
+                        isRunning = false;
+                        playAlarm();
+                    }
+                }, 1000);
+            }
+        }
+        
+        function resetTimer() {
+            clearInterval(timer);
+            timeLeft = 900;
+            isRunning = false;
+            updateDisplay();
+        }
+        
+        function updateDisplay() {
+            let minutes = Math.floor(timeLeft / 60);
+            let seconds = timeLeft % 60;
+            document.getElementById("timer").textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        function playAlarm() {
+            let alarm = new Audio('alarme.mp3');
+            alarm.play();
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1 id="timer" onclick="startTimer()">15:00</h1>
+        <button class="btn" onclick="resetTimer()">Reset Timer</button>
+        <a href="index.html" class="btn">Fin</a>
+    </div>
+</body>
+</html>
