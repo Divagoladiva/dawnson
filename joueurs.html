@@ -8,7 +8,7 @@
     <script>
         let flemmardPercent = 50;
         let quetesBleues = [
-            "skibidi 1", "Quête bleue 2", "Quête bleue 3", "Quête bleue 4", 
+            "Quête bleue 1", "Quête bleue 2", "Quête bleue 3", "Quête bleue 4", 
             "Quête bleue 5", "Quête bleue 6", "Quête bleue 7", "Quête bleue 8", 
             "Quête bleue 9", "Quête bleue 10"
         ];
@@ -18,7 +18,7 @@
             "Quête rouge 9", "Quête rouge 10"
         ];
         let quetesBleuesExplications = [
-            "ampagnan? 1", "Explication de la quête bleue 2", "Explication de la quête bleue 3", 
+            "Explication de la quête bleue 1", "Explication de la quête bleue 2", "Explication de la quête bleue 3", 
             "Explication de la quête bleue 4", "Explication de la quête bleue 5", "Explication de la quête bleue 6", 
             "Explication de la quête bleue 7", "Explication de la quête bleue 8", "Explication de la quête bleue 9", 
             "Explication de la quête bleue 10"
@@ -131,18 +131,22 @@
         }
 
         function showDescription(index) {
-            // Utilisation de l'indice pour obtenir la description appropriée
+            // Extraire le numéro de la quête (par exemple, "5" de "Quête bleue 5")
+            let questText = currentQuetes[index];
+            let questNumber = parseInt(questText.match(/\d+/)[0]); // On récupère le premier numéro dans le nom de la quête
+            
+            // Trouver la description correspondante en utilisant le numéro
             let explication;
-            if (currentQuetes[index].includes("bleue")) {
-                // Si la quête est bleue, utilise la liste des explications des quêtes bleues
-                let questIndex = quetesBleues.indexOf(currentQuetes[index]);
-                explication = quetesBleuesExplications[questIndex];
+            if (questText.includes("bleue")) {
+                // Si la quête est bleue, on utilise les explications des quêtes bleues
+                explication = quetesBleuesExplications.find(exp => exp.startsWith(`Explication de la quête bleue ${questNumber}`));
             } else {
-                // Si la quête est rouge, utilise la liste des explications des quêtes rouges
-                let questIndex = quetesRouges.indexOf(currentQuetes[index]);
-                explication = quetesRougesExplications[questIndex];
+                // Si la quête est rouge, on utilise les explications des quêtes rouges
+                explication = quetesRougesExplications.find(exp => exp.startsWith(`Explication de la quête rouge ${questNumber}`));
             }
-            alert(currentQuetes[index] + " - " + explication);
+            
+            // Afficher l'explication
+            alert(questText + " - " + explication);
         }
     </script>
 </head>
