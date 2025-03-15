@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
     <script>
         let timer;
-        let timeLeft = 900; // 900
+        let timeLeft = 600; // 10m
         let isRunning = false;
         
         function startTimer() {
@@ -28,7 +28,7 @@
         
         function resetTimer() {
             clearInterval(timer);
-            timeLeft = 900;
+            timeLeft = 600;
             isRunning = false;
             updateDisplay();
         }
@@ -47,7 +47,7 @@
 </head>
 <body>
     <div class="container">
-        <h1 id="timer" onclick="startTimer()">15:00</h1>
+        <h1 id="timer" onclick="startTimer()">10:00</h1>
         <button class="btn" onclick="resetTimer()">Reset Timer</button>
         <a href="index.html" class="btn">Fin</a>
     </div>
