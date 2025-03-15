@@ -9,11 +9,13 @@
         let flemmardPercent = 50;
         let quetesBleues = ["Exemple quête bleue 1", "Exemple quête bleue 2", "Exemple quête bleue 3", "Exemple quête bleue 4", "Exemple quête bleue 5", "Exemple quête bleue 6", "Exemple quête bleue 7", "Exemple quête bleue 8", "Exemple quête bleue 9", "Exemple quête bleue 10"];
         let quetesRouges = ["Exemple quête rouge 1", "Exemple quête rouge 2", "Exemple quête rouge 3", "Exemple quête rouge 4", "Exemple quête rouge 5", "Exemple quête rouge 6", "Exemple quête rouge 7", "Exemple quête rouge 8", "Exemple quête rouge 9", "Exemple quête rouge 10"];
+        let quetesBleuesExplications = ["Explication quête bleue 1", "Explication quête bleue 2", "Explication quête bleue 3", "Explication quête bleue 4", "Explication quête bleue 5", "Explication quête bleue 6", "Explication quête bleue 7", "Explication quête bleue 8", "Explication quête bleue 9", "Explication quête bleue 10"];
+        let quetesRougesExplications = ["Explication quête rouge 1", "Explication quête rouge 2", "Explication quête rouge 3", "Explication quête rouge 4", "Explication quête rouge 5", "Explication quête rouge 6", "Explication quête rouge 7", "Explication quête rouge 8", "Explication quête rouge 9", "Explication quête rouge 10"];
         let currentQuetes = ["", "", ""];
         let completedQuetes = [false, false, false];
         let isFlemmard = false;
         let timerActive = false;
-        
+
         function updateCounter() {
             document.getElementById("flemmardValue").textContent = flemmardPercent + "%";
         }
@@ -31,63 +33,67 @@
                 updateCounter();
             }
         }
-        
+
         function startGame() {
             document.getElementById("setup").style.display = "none";
             document.getElementById("roleDisplay").style.display = "block";
-            
+
             let randomChance = Math.floor(Math.random() * 10) + 1;
             isFlemmard = randomChance <= flemmardPercent / 10;
-            
+
             let roleText = isFlemmard ? "Flemmard" : "Bosseur";
             let roleColor = isFlemmard ? "red" : "blue";
-            
+
             document.getElementById("role").textContent = roleText;
             document.getElementById("role").style.color = roleColor;
-            
+
             generateQuests();
         }
-        
+
         function generateQuests() {
             let usedQuests = [];
             for (let i = 0; i < 3; i++) {
                 let chance = Math.random();
                 let isBlue = !isFlemmard && chance < 0.8;
                 let queteList = isBlue ? quetesBleues : quetesRouges;
+                let explicationList = isBlue ? quetesBleuesExplications : quetesRougesExplications;
                 let newQuete;
+                let newExplication;
                 do {
                     newQuete = queteList[Math.floor(Math.random() * queteList.length)];
+                    newExplication = explicationList[queteList.indexOf(newQuete)];
                 } while (usedQuests.includes(newQuete));
                 usedQuests.push(newQuete);
-                
+
                 currentQuetes[i] = newQuete;
                 completedQuetes[i] = false;
-                
+
                 let cell = document.getElementById(`quete${i}`);
                 cell.textContent = currentQuetes[i];
                 cell.style.backgroundColor = isBlue ? "blue" : "red";
+                cell.style.textDecoration = "none"; // Réinitialisation de l'état "barré"
             }
         }
-        
+
         function completeQuete(index) {
             completedQuetes[index] = true;
             document.getElementById(`quete${index}`).style.textDecoration = "line-through";
             checkAllCompleted();
         }
-        
+
         function checkAllCompleted() {
             if (completedQuetes.every(q => q)) {
                 document.getElementById("timer").style.display = "block";
                 startTimer();
             }
         }
-        
+
         function startTimer() {
             if (timerActive) return;
             timerActive = true;
             let timeLeft = 20;
             let timerElement = document.getElementById("timerValue");
-            
+
             let interval = setInterval(() => {
                 timerElement.textContent = timeLeft;
                 if (timeLeft === 0) {
@@ -99,9 +105,15 @@
                 timeLeft--;
             }, 1000);
         }
-        
+
         function showDescription(index) {
-            alert(currentQuetes[index] + " - Description de la quête");
+            let explication;
+            if (currentQuetes[index].includes("bleue")) {
+                explication = quetesBleuesExplications[quetesBleues.indexOf(currentQuetes[index])];
+            } else {
+                explication = quetesRougesExplications[quetesRouges.indexOf(currentQuetes[index])];
+            }
+            alert(currentQuetes[index] + " - " + explication);
         }
     </script>
 </head>
