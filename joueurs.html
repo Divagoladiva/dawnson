@@ -7,10 +7,29 @@
     <link rel="stylesheet" href="style.css">
     <script>
         let flemmardPercent = 50;
-        let quetesBleues = ["L'Hydratation c'est important!", "What's up!", "De bonne humeur", "4", "Exemple quête bleue 5", "Exemple quête bleue 6", "Exemple quête bleue 7", "Exemple quête bleue 8", "Exemple quête bleue 9", "Exemple quête bleue 10"];
-        let quetesRouges = ["Paparazzi ou Papazzani?", "Exemple quête rouge 2", "Exemple quête rouge 3", "Exemple quête rouge 4", "Exemple quête rouge 5", "Exemple quête rouge 6", "Exemple quête rouge 7", "Exemple quête rouge 8", "Exemple quête rouge 9", "Exemple quête rouge 10"];
-        let quetesBleuesExplications = ["L'Hydratation c'est important! caca", "Explication quête bleue 2", "Explication quête bleue 3", "Explication quête bleue 4", "Explication quête bleue 5", "Explication quête bleue 6", "Explication quête bleue 7", "Explication quête bleue 8", "Explication quête bleue 9", "Explication quête bleue 10"];
-        let quetesRougesExplications = ["Prendre en photo quelqu'un discrètement", "Explication quête rouge 2", "Explication quête rouge 3", "Explication quête rouge 4", "Explication quête rouge 5", "Explication quête rouge 6", "Explication quête rouge 7", "Explication quête rouge 8", "Explication quête rouge 9", "Explication quête rouge 10"];
+        let quetesBleues = [
+            "Quête bleue 1", "Quête bleue 2", "Quête bleue 3", "Quête bleue 4", 
+            "Quête bleue 5", "Quête bleue 6", "Quête bleue 7", "Quête bleue 8", 
+            "Quête bleue 9", "Quête bleue 10"
+        ];
+        let quetesRouges = [
+            "Quête rouge 1", "Quête rouge 2", "Quête rouge 3", "Quête rouge 4", 
+            "Quête rouge 5", "Quête rouge 6", "Quête rouge 7", "Quête rouge 8", 
+            "Quête rouge 9", "Quête rouge 10"
+        ];
+        let quetesBleuesExplications = [
+            "Explication de la quête bleue 1", "Explication de la quête bleue 2", "Explication de la quête bleue 3", 
+            "Explication de la quête bleue 4", "Explication de la quête bleue 5", "Explication de la quête bleue 6", 
+            "Explication de la quête bleue 7", "Explication de la quête bleue 8", "Explication de la quête bleue 9", 
+            "Explication de la quête bleue 10"
+        ];
+        let quetesRougesExplications = [
+            "Explication de la quête rouge 1", "Explication de la quête rouge 2", "Explication de la quête rouge 3", 
+            "Explication de la quête rouge 4", "Explication de la quête rouge 5", "Explication de la quête rouge 6", 
+            "Explication de la quête rouge 7", "Explication de la quête rouge 8", "Explication de la quête rouge 9", 
+            "Explication de la quête rouge 10"
+        ];
+        
         let currentQuetes = ["", "", ""];
         let completedQuetes = [false, false, false];
         let isFlemmard = false;
@@ -19,14 +38,14 @@
         function updateCounter() {
             document.getElementById("flemmardValue").textContent = flemmardPercent + "%";
         }
-        
+
         function increase() {
             if (flemmardPercent < 100) {
                 flemmardPercent += 10;
                 updateCounter();
             }
         }
-        
+
         function decrease() {
             if (flemmardPercent > 0) {
                 flemmardPercent -= 10;
@@ -57,14 +76,19 @@
                 let isBlue = !isFlemmard && chance < 0.8;
                 let queteList = isBlue ? quetesBleues : quetesRouges;
                 let explicationList = isBlue ? quetesBleuesExplications : quetesRougesExplications;
-                let newQuete;
-                let newExplication;
-                do {
-                    newQuete = queteList[Math.floor(Math.random() * queteList.length)];
-                    newExplication = explicationList[queteList.indexOf(newQuete)];
-                } while (usedQuests.includes(newQuete));
+                
+                let randomIndex = Math.floor(Math.random() * queteList.length);
+                let newQuete = queteList[randomIndex];
+                let newExplication = explicationList[randomIndex];
+                
+                // Empêcher de sélectionner la même quête
+                while (usedQuests.includes(newQuete)) {
+                    randomIndex = Math.floor(Math.random() * queteList.length);
+                    newQuete = queteList[randomIndex];
+                    newExplication = explicationList[randomIndex];
+                }
+                
                 usedQuests.push(newQuete);
-
                 currentQuetes[i] = newQuete;
                 completedQuetes[i] = false;
 
@@ -107,11 +131,16 @@
         }
 
         function showDescription(index) {
+            // Utilisation de l'indice pour obtenir la description appropriée
             let explication;
             if (currentQuetes[index].includes("bleue")) {
-                explication = quetesBleuesExplications[quetesBleues.indexOf(currentQuetes[index])];
+                // Si la quête est bleue, utilise la liste des explications des quêtes bleues
+                let questIndex = quetesBleues.indexOf(currentQuetes[index]);
+                explication = quetesBleuesExplications[questIndex];
             } else {
-                explication = quetesRougesExplications[quetesRouges.indexOf(currentQuetes[index])];
+                // Si la quête est rouge, utilise la liste des explications des quêtes rouges
+                let questIndex = quetesRouges.indexOf(currentQuetes[index]);
+                explication = quetesRougesExplications[questIndex];
             }
             alert(currentQuetes[index] + " - " + explication);
         }
@@ -124,7 +153,7 @@
         <span id="flemmardValue">50%</span>
         <button class="btn" onclick="increase()">+</button>
         <p><strong>Dans l'entreprise Quoicoub & skibidi, Il y a 2 types de gens: Les bosseurs et les flemmards. Vous aurrez chacun des tâches à compléter, pour les bosseurs ça sera des tâches qui feront avancer l'entreprise, mais pour les flemmards c'est complètement l'inverse!
-        Votre but sera de ne pas vous faire repérer en tant que flemmard. Toutes les 10 minutes, il y aurra une réunion à la TV, vous devrez tous venir et nous choisirons 1 personne à virer de l'entreprise. La partie se termine quand il n'y a plus aucun bosseurs ou flemmards..</strong></p>
+        Votre but sera de ne pas vous faire repérer en tant que flemmard. Toutes les 10 minutes, il y aurra une réunion à la TV, vous devrez tous venir et nous choisirons 1 personne à virer de l'entreprise. La partie se termine quand il n'y a plus aucun bosseurs ou flemmards.</strong></p>
         <button class="btn" onclick="startGame()">Start</button>
     </div>
     
