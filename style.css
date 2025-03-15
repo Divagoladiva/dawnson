@@ -21,6 +21,11 @@ h1 {
     font-size: 2em;
 }
 
+role {
+    position: absolute;
+    top: 90%;
+}
+
 .buttons {
     position: absolute;
     bottom: 50%;
