@@ -136,10 +136,12 @@
             
             if (questNumberMatch) {
                 let questNumber = questNumberMatch[1]; // Récupère le numéro entre parenthèses
+
+                let isBlueQuest = quetesBleues.includes(questText);
         
                 // Trouver la description correspondante en utilisant ce format (5), (6), etc.
                 let explication;
-                if (questText.includes("(bleue)")) {
+                if (isBlueQuest) {
                     // Si la quête est bleue, on utilise les explications des quêtes bleues
                     explication = quetesBleuesExplications.find(exp => exp.startsWith(`(${questNumber})`));
                 } else {
