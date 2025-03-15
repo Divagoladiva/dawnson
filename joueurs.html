@@ -8,7 +8,7 @@
     <script>
         let flemmardPercent = 50;
         let quetesBleues = [
-            "1 P'tite soif?", "(2) De bonne humeur", "(3) Enchanté", "(4) Vive le rouge!", 
+            "(1) P'tite soif?", "(2) De bonne humeur", "(3) Enchanté", "(4) Vive le rouge!", 
             "(5) Revenus de vente", "(6) Acte de bontée", "(7) T'as faim?", "(8) Derien mec", 
             "(9) Yin et le Yang", "(10) Vive le bleu!"
         ];
@@ -18,7 +18,7 @@
             "(9) Hahaha", "(10) Ouistiti", "(11) Surprise!"
         ];
         let quetesBleuesExplications = [
-            "1 -Prend un verre, -Mets de l'eau dedans, -Fais le boire à quelqu'un", "(2) Donne un compliment sincère à trois personnes différentes, sans mentionner leur apparence physique (pour éviter les clichés).", "(3) Serrer la main de quelqu'un", "(4) Prend en photo 5 objet rouge", 
+            "(1) -Prend un verre, -Mets de l'eau dedans, -Fais le boire à quelqu'un", "(2) Donne un compliment sincère à trois personnes différentes, sans mentionner leur apparence physique (pour éviter les clichés).", "(3) Serrer la main de quelqu'un", "(4) Prend en photo 5 objet rouge", 
             "(5)  Appelle un joueur au téléphone et parle lui de l'entreprise", "(6) Fais une petite bonne action comme débarrasser une assiette, replacer un objet mal rangé, ou passer un coup de balais ", "(7) Fais manger quelque chose à quelqu'un (un petit fruit, un apéritif etc...)"
             , "(8) Aide quelqu’un à accomplir une tâche", "(9) Prends 3 grandes respirations profondes et concentre-toi sur ton souffle pendant 30 secondes.", "(10) Prend en photo 5 objet bleu"
         ];
@@ -130,22 +130,32 @@
         }
 
         function showDescription(index) {
-            // Extraire le numéro de la quête (par exemple, "5" de "Quête bleue 5")
+            // Extraire le numéro de la quête entre parenthèses (par exemple, (1) de "Quête bleue (1)")
             let questText = currentQuetes[index];
-            let questNumber = parseInt(questText.match(/\d+/)[0]); // On récupère le premier numéro dans le nom de la quête
+            let questNumberMatch = questText.match(/\((\d+)\)/); // Extrait le numéro entre parenthèses
             
-            // Trouver la description correspondante en utilisant le numéro
-            let explication;
-            if (questText.includes("bleue")) {
-                // Si la quête est bleue, on utilise les explications des quêtes bleues
-                explication = quetesBleuesExplications.find(exp => exp.startsWith(`Explication de la quête bleue ${questNumber}`));
+            if (questNumberMatch) {
+                let questNumber = questNumberMatch[1]; // Récupère le numéro entre parenthèses
+        
+                // Trouver la description correspondante en utilisant ce format (1), (6), etc.
+                let explication;
+                if (questText.includes("bleue")) {
+                    // Si la quête est bleue, on utilise les explications des quêtes bleues
+                    explication = quetesBleuesExplications.find(exp => exp.startsWith(`Explication de la quête bleue (${questNumber})`));
+                } else {
+                    // Si la quête est rouge, on utilise les explications des quêtes rouges
+                    explication = quetesRougesExplications.find(exp => exp.startsWith(`Explication de la quête rouge (${questNumber})`));
+                }
+        
+                // Afficher l'explication
+                if (explication) {
+                    alert(questText + " - " + explication);
+                } else {
+                    alert("Description non trouvée !");
+                }
             } else {
-                // Si la quête est rouge, on utilise les explications des quêtes rouges
-                explication = quetesRougesExplications.find(exp => exp.startsWith(`Explication de la quête rouge ${questNumber}`));
+                alert("Numéro de quête invalide !");
             }
-            
-            // Afficher l'explication
-            alert(questText + " - " + explication);
         }
     </script>
 </head>
